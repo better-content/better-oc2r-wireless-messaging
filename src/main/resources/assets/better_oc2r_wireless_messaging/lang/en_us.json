@@ -1,0 +1,8 @@
+{
+  "itemGroup.better_oc2r_wireless_messaging": "OC2R Wireless",
+  "block.better_oc2r_wireless_messaging.wireless_relay": "Wireless Relay",
+  "item.better_oc2r_wireless_messaging.wireless_relay": "Wireless Relay",
+  "item.better_oc2r_wireless_messaging.wireless_card": "Wireless Card",
+  "item.better_oc2r_wireless_messaging.wireless_card.desc": "Topic-based long range wireless messaging for OC2R.",
+  "tooltip.better_oc2r_wireless_messaging.distance_cost": "Energy cost scales linearly with link distance."
+}

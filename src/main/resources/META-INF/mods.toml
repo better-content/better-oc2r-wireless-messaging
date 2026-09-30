@@ -1,10 +1,10 @@
 modLoader="javafml"
 loaderVersion="[47,)"
 license="AGPL-3.0-or-later"
-issueTrackerURL="https://github.com/better-content/oc2r-wireless-pubsub/issues"
-displayURL="https://github.com/better-content/oc2r-wireless-pubsub"
+issueTrackerURL="https://github.com/better-content/better-oc2r-wireless-messaging/issues"
+displayURL="https://github.com/better-content/better-oc2r-wireless-messaging"
 logoFile=""
-authors="oc2r_wireless_pubsub"
+authors="better_oc2r_wireless_messaging"
 credits=""
 displayName="${mod_name}"
 version="${mod_version}"
@@ -15,23 +15,23 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 description="A Forge 1.20.1 mod scaffold."
-authors="oc2r_wireless_pubsub"
+authors="better_oc2r_wireless_messaging"
 
-[[dependencies.oc2r_wireless_pubsub]]
+[[dependencies.better_oc2r_wireless_messaging]]
 modId="minecraft"
 mandatory=true
 versionRange="[${mc_version},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.oc2r_wireless_pubsub]]
+[[dependencies.better_oc2r_wireless_messaging]]
 modId="forge"
 mandatory=true
 versionRange="[${forge_version},)"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies.oc2r_wireless_pubsub]]
+[[dependencies.better_oc2r_wireless_messaging]]
 modId="oc2r"
 mandatory=true
 versionRange="[2.1.0,)"

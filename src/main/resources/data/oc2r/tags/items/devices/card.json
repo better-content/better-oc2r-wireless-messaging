@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "oc2r_wireless_pubsub:wireless_card"
+    "better_oc2r_wireless_messaging:wireless_card"
   ]
 }

@@ -12,7 +12,7 @@ group = project.mod_group_id
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 base {
-    archivesName = 'oc2r-wireless-pubsub'
+    archivesName = 'better-oc2r-wireless-messaging'
 }
 
 repositories {
@@ -99,7 +99,7 @@ jacocoTestReport {
     }
     classDirectories.setFrom(
         files(classDirectories.files.collect {
-            fileTree(dir: it, include: ['com/bettercontent/oc2rwirelesspubsub/data/**'])
+            fileTree(dir: it, include: ['com/bettercontent/betteroc2rwirelessmessaging/data/**'])
         })
     )
 }
@@ -108,7 +108,7 @@ jacocoTestCoverageVerification {
     dependsOn test
     classDirectories.setFrom(
         files(classDirectories.files.collect {
-            fileTree(dir: it, include: ['com/bettercontent/oc2rwirelesspubsub/data/**'])
+            fileTree(dir: it, include: ['com/bettercontent/betteroc2rwirelessmessaging/data/**'])
         })
     )
     violationRules {
@@ -147,11 +147,11 @@ jar {
     manifest {
         attributes([
                 'Specification-Title': project.mod_name,
-                'Specification-Vendor': 'oc2r_wireless_pubsub authors',
+                'Specification-Vendor': 'better_oc2r_wireless_messaging authors',
                 'Specification-Version': '1',
                 'Implementation-Title': project.name,
                 'Implementation-Version': project.version,
-                'Implementation-Vendor': 'oc2r_wireless_pubsub'
+                'Implementation-Vendor': 'better_oc2r_wireless_messaging'
         ])
     }
     finalizedBy 'reobfJar'

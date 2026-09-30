@@ -1,4 +1,4 @@
-# OC2R Wireless PubSub
+# Better OC2R Wireless Messaging
 
 OC2R addon for Forge `1.20.1` that adds:
 - `Wireless Relay` block (powered broker node).
@@ -48,7 +48,7 @@ end
 ```
 
 ## Lua Helpers
-Helper scripts are provided in [assets/oc2r_wireless_pubsub/lua](src/main/resources/assets/oc2r_wireless_pubsub/lua):
+Helper scripts are provided in [assets/better_oc2r_wireless_messaging/lua](src/main/resources/assets/better_oc2r_wireless_messaging/lua):
 - `wifi.lua` library
 - `wifi-send.lua`
 - `wifi-topics.lua`
@@ -60,4 +60,4 @@ For modpack and mod discussion, playtest feedback, and bug reports, join the [Be
 
 ## Identity
 
-The clean-break canonical identity is repository/artifact `oc2r-wireless-pubsub`, mod ID and resource namespace `oc2r_wireless_pubsub`, and Maven group `com.bettercontent`. Legacy `oc2rwireless` worlds and configs are not migrated.
+The clean-break canonical identity is repository/artifact `better-oc2r-wireless-messaging`, mod ID and resource namespace `better_oc2r_wireless_messaging`, and Maven group `com.bettercontent`. Legacy `oc2rwireless` worlds and configs are not migrated.

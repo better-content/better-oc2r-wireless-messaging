@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "better_oc2r_wireless_messaging:block/wireless_relay_side",
+    "north": "better_oc2r_wireless_messaging:block/wireless_relay_side",
+    "south": "better_oc2r_wireless_messaging:block/wireless_relay_side",
+    "east": "better_oc2r_wireless_messaging:block/wireless_relay_side",
+    "west": "better_oc2r_wireless_messaging:block/wireless_relay_side",
+    "up": "better_oc2r_wireless_messaging:block/wireless_relay_top",
+    "down": "better_oc2r_wireless_messaging:block/wireless_relay_bottom"
+  }
+}
