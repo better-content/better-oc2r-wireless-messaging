@@ -139,8 +139,26 @@ tasks.register('verifyFast') {
 
 tasks.register('verifyFull') {
     group = 'verification'
-    description = 'Runs the full verification lane. This project currently has no higher-signal lane beyond verifyFast.'
+    description = 'Runs deterministic checks and verifies the deployable resource-pack JAR.'
     dependsOn tasks.named('verifyFast')
+    dependsOn tasks.named('verifyRuntimeJarContents')
+}
+
+tasks.register('verifyRuntimeJarContents') {
+    group = 'verification'
+    dependsOn tasks.named('stageRuntimeJar')
+    doLast {
+        def artifact = file("build/libs/${project.base.archivesName.get()}-${project.version}.jar")
+        if (!artifact.isFile()) throw new GradleException("Missing staged runtime JAR: ${artifact}")
+        new java.util.jar.JarFile(artifact).withCloseable { jar ->
+            ['META-INF/mods.toml', 'pack.mcmeta',
+             'com/bettercontent/betteroc2rwirelessmessaging/data/WirelessNetworkSavedData.class'].each { entry ->
+                if (jar.getJarEntry(entry) == null) {
+                    throw new GradleException("Runtime JAR is missing ${entry}")
+                }
+            }
+        }
+    }
 }
 
 jar {
