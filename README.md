@@ -1,5 +1,11 @@
 # Better OC2R Wireless Messaging
 
+## Scope and authority
+
+This repository owns its mod-specific behavior and authoring inputs. Read [local instructions](AGENTS.md)
+and the [shared documentation/policy index](../../better-content-modpack/docs/README.md).
+
+
 OC2R addon for Forge `1.20.1` that adds:
 - `Wireless Relay` block (powered broker node).
 - `Wireless Card` (OC2R card-slot RPC device).
