@@ -1,6 +1,8 @@
 package com.bettercontent.betteroc2rwirelessmessaging.device;
 
 import com.bettercontent.betteroc2rwirelessmessaging.blockentity.WirelessRelayBlockEntity;
+import com.bettercontent.betteroc2rwirelessmessaging.diagnostics.PlaytestDiagnostics;
+import com.bettercontent.betteroc2rwirelessmessaging.diagnostics.PlaytestLog;
 import com.bettercontent.betteroc2rwirelessmessaging.data.WirelessNetworkSavedData;
 import li.cil.oc2.api.bus.device.ItemDevice;
 import li.cil.oc2.api.bus.device.object.Callback;
@@ -57,26 +59,37 @@ public final class WirelessCardItemDevice {
         @Callback
         public List<Integer> send(@Parameter("topic") @Nullable final String topic,
                                   @Parameter("payload") @Nullable final String payload) {
-            final String normalizedTopic = requireTopic(topic);
+            final String normalizedTopic;
+            try { normalizedTopic = requireTopic(topic); }
+            catch (IllegalArgumentException failure) { rejected("empty_topic"); throw failure; }
             if (payload == null) {
+                rejected("null_payload");
                 throw new IllegalArgumentException("payload cannot be null");
             }
 
-            final HostContext host = getHostContext();
+            final HostContext host;
+            try { host = getHostContext(); }
+            catch (IllegalStateException absent) { rejected("no_server_host"); throw absent; }
             final WirelessNetworkSavedData broker = WirelessNetworkSavedData.get(host.level());
             if (!broker.canPublish(normalizedTopic, payload)) {
+                rejected("publication_limit");
                 throw new IllegalArgumentException("wireless topic, payload, or storage limit rejected publication");
             }
             final WirelessRelayBlockEntity sourceRelay = nearestRelay(host)
-                .orElseThrow(() -> new IllegalStateException("No wireless relay in range of this computer."));
+                .orElseThrow(() -> { rejected("no_loaded_relay"); return new IllegalStateException("No wireless relay in range of this computer."); });
 
             final int payloadBytes = payload.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
             final int energyCost = BASE_ENERGY_COST + ((payloadBytes + 31) / 32) * ENERGY_PER_32_BYTES;
             if (!sourceRelay.consumeEnergy(energyCost)) {
+                rejected("insufficient_energy");
                 throw new IllegalStateException("Source relay has insufficient energy.");
             }
 
-            broker.publish(normalizedTopic, payload, new WirelessNetworkSavedData.Origin(host.owner(),host.hostId(),java.util.UUID.randomUUID().toString(),energyCost,payloadBytes));
+            final var origin = new WirelessNetworkSavedData.Origin(host.owner(),host.hostId(),java.util.UUID.randomUUID().toString(),energyCost,payloadBytes);
+            broker.publish(normalizedTopic, payload, origin);
+            var log = PlaytestDiagnostics.LOG;
+            if (log.enabled("wireless")) log.debug("wireless", "wireless.publish", PlaytestLog.Context.server(host.level().dimension().location().toString(), host.level().getGameTime()),
+                "committed", "broker_published", () -> com.bettercontent.betteroc2rwirelessmessaging.diagnostics.FeatureObservation.fields(origin.operation(), payloadBytes, energyCost));
             return List.of(energyCost, payloadBytes);
         }
 
@@ -128,9 +141,18 @@ public final class WirelessCardItemDevice {
         }
 
         private void received(HostContext host,List<WirelessNetworkSavedData.Delivery> messages){
+            if (!messages.isEmpty() && PlaytestDiagnostics.LOG.enabled("wireless"))
+                PlaytestDiagnostics.LOG.debug("wireless", "wireless.delivery", PlaytestLog.Context.server(host.level().dimension().location().toString(), host.level().getGameTime()),
+                    "observed", "batch_returned", () -> PlaytestLog.fields("messages", messages.size(), "energy_charged", 0, "offset_durability", "not_observed"));
             for(var message:messages){var origin=message.origin();if(origin!=null&&origin.receivedBy(host.hostId())){
                 net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new com.bettercontent.betteroc2rwirelessmessaging.api.WirelessMessageReceivedEvent(host.level().getServer(),origin.owner(),origin.operation(),message.topic(),origin.bytes(),origin.energy()));
             }}
+        }
+
+        private static void rejected(String reason) {
+            var log = PlaytestDiagnostics.LOG;
+            if (log.enabled("wireless")) log.event("wireless", "wireless.publish", "server", "rejected", reason,
+                () -> PlaytestLog.fields("energy_charged", 0));
         }
 
         private String normalizeConsumerId(@Nullable final String consumerId) {

@@ -1,5 +1,23 @@
 # Better OC2R Wireless Messaging
 
+## Playtest diagnostics
+
+`bc.playtest.better_oc2r_wireless_messaging.wireless` reports sender validation/context/
+loaded-relay/energy rejections with zero charge, completed broker publication with the
+existing operation UUID, byte/energy scalars, and nonempty delivery batches. Empty polls
+stay silent. Topics, wildcard patterns, consumer/host IDs, owner names and payloads are
+never logged, hashed or pseudonymized. A broker commit is not observed disk durability;
+a returned delivery batch is not application consumption. No extra packet or save data
+is added for diagnostics.
+
+INFO startup supplies enabled/version/OC2R presence and exact owner-artifact source
+metadata when present (UNKNOWN otherwise). The repository-local Java17 helper shares
+120 DEBUG/TRACE details/minute (burst20),256 keys and2048-char records across categories;
+native END ticks emit30-second summaries and stop clears aggregation without rearming.
+Standalone stays native INFO; pack profile selects scoped DEBUG/`bc.playtest.level`.
+Common six-case and publication privacy/stage projection tests join the existing source
+gate. JVM validation remains separate from native OC2R/restart acceptance.
+
 ## Scope and authority
 
 This repository owns its mod-specific behavior and authoring inputs. Read [local instructions](AGENTS.md)
