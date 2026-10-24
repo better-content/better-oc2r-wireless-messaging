@@ -18,11 +18,7 @@ Standalone stays native INFO; pack profile selects scoped DEBUG/`bc.playtest.lev
 Common six-case and publication privacy/stage projection tests join the existing source
 gate. JVM validation remains separate from native OC2R/restart acceptance.
 
-## Scope and authority
-
-This repository owns its mod-specific behavior and authoring inputs. Read [local instructions](AGENTS.md)
-and the [shared documentation/policy index](../../better-content-modpack/docs/README.md).
-
+## Scope
 
 OC2R addon for Forge `1.20.1` that adds:
 - `Wireless Relay` block (powered broker node).
