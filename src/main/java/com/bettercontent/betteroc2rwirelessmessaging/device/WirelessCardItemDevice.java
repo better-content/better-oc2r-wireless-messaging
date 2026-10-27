@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class WirelessCardItemDevice {
-    private static final int BASE_ENERGY_COST = 4;
-    private static final int ENERGY_PER_32_BYTES = 1;
     private static final int RELAY_RANGE = 16;
 
     private WirelessCardItemDevice() {
@@ -78,15 +76,19 @@ public final class WirelessCardItemDevice {
             final WirelessRelayBlockEntity sourceRelay = nearestRelay(host)
                 .orElseThrow(() -> { rejected("no_loaded_relay"); return new IllegalStateException("No wireless relay in range of this computer."); });
 
-            final int payloadBytes = payload.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
-            final int energyCost = BASE_ENERGY_COST + ((payloadBytes + 31) / 32) * ENERGY_PER_32_BYTES;
-            if (!sourceRelay.consumeEnergy(energyCost)) {
-                rejected("insufficient_energy");
-                throw new IllegalStateException("Source relay has insufficient energy.");
+            final WirelessNetworkSavedData.Origin origin;
+            try {
+                origin = WirelessTransmission.send(broker, normalizedTopic, payload, host.owner(), host.hostId(), cost -> {
+                    if (sourceRelay.consumeEnergy(cost)) return true;
+                    rejected("insufficient_energy");
+                    return false;
+                });
+            } catch (IllegalArgumentException rejectedPublication) {
+                rejected("publication_limit");
+                throw rejectedPublication;
             }
-
-            final var origin = new WirelessNetworkSavedData.Origin(host.owner(),host.hostId(),java.util.UUID.randomUUID().toString(),energyCost,payloadBytes);
-            broker.publish(normalizedTopic, payload, origin);
+            final int payloadBytes = origin.bytes();
+            final int energyCost = origin.energy();
             var log = PlaytestDiagnostics.LOG;
             if (log.enabled("wireless")) log.debug("wireless", "wireless.publish", PlaytestLog.Context.server(host.level().dimension().location().toString(), host.level().getGameTime()),
                 "committed", "broker_published", () -> com.bettercontent.betteroc2rwirelessmessaging.diagnostics.FeatureObservation.fields(origin.operation(), payloadBytes, energyCost));
